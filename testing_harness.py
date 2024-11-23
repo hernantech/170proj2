@@ -1,4 +1,4 @@
-from search import featuresearch
+from search import Featuresearch
 
 def main():
     print("Welcome to Alex & Tim's Feature Selection Algorithm.")
@@ -10,8 +10,10 @@ def main():
     
     choice = int(input())
     if choice == 1:
-        searchobj = featuresearch(num_features=num_features)
+        searchobj = Featuresearch(num_features=num_features)
         searchobj.forward_selection()
     if choice == 2:
-        searchobj = featuresearch(num_features=num_features)
+        searchobj = Featuresearch(num_features=num_features)
         searchobj.backwards_elimination()
+
+main()
