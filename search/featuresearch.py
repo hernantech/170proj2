@@ -8,6 +8,7 @@ class Featuresearch:
         self.data = data
         if self.data == None:
             self.num_features = num_features
+            self.features = set(range(1, self.num_features + 1)) #dropped this lol
 
         #otherwise use the csv to fill num features    
         else:

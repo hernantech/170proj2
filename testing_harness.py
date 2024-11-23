@@ -6,7 +6,7 @@ def main():
     
     print("\nType the number of the algorithm you want to run.")
     print("1) Forward Selection")
-#    print("2) Backward Elimination")
+    print("2) Backward Elimination")
     
     choice = int(input())
     if choice == 1:
