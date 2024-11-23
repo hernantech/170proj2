@@ -54,8 +54,34 @@ class Featuresearch:
             print(f"\nFinished search!! The best feature subset is {sorted(best_total_features)}, "f"which has an accuracy of {best_total_accuracy:.1f}%")
 
     def backwards_elimination(self):
-        current_features = set(range(1, num_features +1))
+        current_features = set(range(1, self.num_features +1))
+        # starting w/all features
+        best_accuracy = self.dummy_evaluate(current_features)
+        print(f"Using all features and \"random\" evaluation, I get an accuracy of {best_accuracy:.1f}%")
+        print("Beginning search.")
+        
+        # removing each feature
+        while current_features:
+            best_subset = None
+            best_new_accuracy = 0
+            
+            # removing each remaining feature
+            for feature in current_features:
+                test_features = current_features - {feature}
+                accuracy = self.dummy_evaluate(test_features)
 
+                print(f"Using feature(s) {sorted(test_features)} accuracy is {accuracy:.1f}%")
+                if accuracy > best_new_accuracy:
+                    best_new_accuracy = accuracy
+                    best_subset = test_features
+            
+            # remove 
+            current_features = best_subset
+            if best_new_accuracy < best_accuracy:
+                print("(Warning, Accuracy has decreased!)")
+            best_accuracy = best_new_accuracy
+            if current_features:  #print if still more features
+                print(f"Feature set {sorted(current_features)} was best, accuracy is {best_accuracy:.1f}%\n")
     
     
     def dummy_evaluate(self, subset_of_features):
