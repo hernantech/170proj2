@@ -4,9 +4,12 @@ import random
 
 
 class Featuresearch:
-    def __init__(self, data = None):
+    def __init__(self, num_features = None, data = None):
+        self.data = data
         if self.data == None:
-            print("do something here with dummies and mocks")
+            self.num_features = num_features
+
+        #otherwise use the csv to fill num features    
         else:
             self.data = pandas.read_csv(data, delim_whitespace=True, header=None)
             self.num_features = len(self.data.columns) - 1 #index is off by one
@@ -49,6 +52,9 @@ class Featuresearch:
             #finally
             print(f"Feature set {sorted(current_features)} was best, accuracy is {best_accuracy:.1f}%")
             print(f"\nFinished search!! The best feature subset is {sorted(best_total_features)}, "f"which has an accuracy of {best_total_accuracy:.1f}%")
+
+    def backwards_elimination(self):
+        current_features = set(range(1, num_features +1))
 
     
     
