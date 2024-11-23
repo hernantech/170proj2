@@ -58,6 +58,11 @@ class Featuresearch:
         current_features = set(range(1, self.num_features +1))
         # starting w/all features
         best_accuracy = self.dummy_evaluate(current_features)
+        #forgot these two
+        best_total_accuracy = best_accuracy
+        best_total_features = current_features.copy()
+
+
         print(f"Using all features and \"random\" evaluation, I get an accuracy of {best_accuracy:.1f}%")
         print("Beginning search.")
         
@@ -76,14 +81,18 @@ class Featuresearch:
                     best_new_accuracy = accuracy
                     best_subset = test_features
             
-            # remove 
+            #fixed this part to best of set overall (was not before)
             current_features = best_subset
-            if best_new_accuracy < best_accuracy:
+            if best_new_accuracy > best_total_accuracy:
+                best_total_accuracy = best_new_accuracy
+                best_total_features = best_subset.copy()
+                print(f"Feature set {sorted(current_features)} was best, accuracy is {best_new_accuracy:.1f}%\n")
+            else:
                 print("(Warning, Accuracy has decreased!)")
-            best_accuracy = best_new_accuracy
-            if current_features:  #print if still more features
-                print(f"Feature set {sorted(current_features)} was best, accuracy is {best_accuracy:.1f}%\n")
-    
+                print(f"Feature set {sorted(current_features)} was best, accuracy is {best_new_accuracy:.1f}%\n")
+        
+                
+        print(f"\nFinished search!! The best feature subset is {sorted(best_total_features)}, " f"which has an accuracy of {best_total_accuracy:.1f}%")
     
     def dummy_evaluate(self, subset_of_features):
         return random.uniform(10, 90)
