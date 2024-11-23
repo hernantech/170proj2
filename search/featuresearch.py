@@ -52,7 +52,8 @@ class Featuresearch:
               f"which has an accuracy of {best_total_accuracy:.1f}%")
 
     def backward_elimination(self):
-        current_features = set(range(1, self.num_features + 1))  # starting w/all features
+        # starting with all features
+        current_features = set(range(1, self.num_features + 1))
         best_accuracy = self.dummy_evaluate(current_features)
         print(f"Using all features and \"random\" evaluation, I get an accuracy of {best_accuracy:.1f}%")
         print("Beginning search.")
@@ -60,7 +61,7 @@ class Featuresearch:
         # removing each feature
         while current_features:
             best_subset = None
-            best_new_accuracy = -1  # initialize with a very low value
+            best_new_accuracy = -1  # initializing with a very low value
 
             # removing each remaining feature
             for feature in current_features:
@@ -68,7 +69,7 @@ class Featuresearch:
                 accuracy = self.dummy_evaluate(test_features)
                 print(f"Using feature(s) {sorted(test_features)} accuracy is {accuracy:.1f}%")
 
-                # track the best subset and accuracy
+                # keeping track of the best subset and accuracy
                 if accuracy > best_new_accuracy:
                     best_new_accuracy = accuracy
                     best_subset = test_features
