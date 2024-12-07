@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.preproccessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
 import time
 
 class NNClassifier:
