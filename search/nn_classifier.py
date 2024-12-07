@@ -26,4 +26,4 @@ class NNClassifier:
         #getting the index of the nearest neighbor
         n_n_index = np.argmin(distances)
 
-        return self.training_labels(n_n_index)
+        return self.training_labels[n_n_index]
