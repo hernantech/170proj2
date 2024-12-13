@@ -1,6 +1,9 @@
 import pandas
 import random
 
+from search.validator import Validator
+from search.nn_classifier import NNClassifier
+
 
 
 class Featuresearch:
@@ -30,11 +33,17 @@ class Featuresearch:
         while(not_used_features):
             best_accuracy = -1
             best_feature = None
-            
+            validator = Validator()#using the validator
+
             # Try each unused feature
             for feature in not_used_features:
                 candidate_features = current_features | {feature} #either one
-                accuracy = self.dummy_evaluate(candidate_features)
+                #accuracy = self.dummy_evaluate(candidate_features)
+                accuracy = validator.validate(
+                    feature_subset = candidate_features,
+                    classifier = NNClassifier,
+                    data = self.data.to_numpy()
+                )
                 print(f"Using feature(s) {sorted(candidate_features)} accuracy is {accuracy:.1f}%")
                 
                 #now comparing for the best one
@@ -61,6 +70,7 @@ class Featuresearch:
         #forgot these two
         best_total_accuracy = best_accuracy
         best_total_features = current_features.copy()
+        validator = Validator() #using the validator
 
 
         print(f"Using all features and \"random\" evaluation, I get an accuracy of {best_accuracy:.1f}%")
@@ -74,7 +84,12 @@ class Featuresearch:
             # removing each remaining feature
             for feature in current_features:
                 test_features = current_features - {feature}
-                accuracy = self.dummy_evaluate(test_features)
+                # accuracy = self.dummy_evaluate(candidate_features)
+                accuracy = validator.validate(
+                    feature_subset = candidate_features,
+                    classifier = NNClassifier,
+                    data = self.data.to_numpy()
+                )
 
                 print(f"Using feature(s) {sorted(test_features)} accuracy is {accuracy:.1f}%")
                 if accuracy > best_new_accuracy:
