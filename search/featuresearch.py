@@ -42,7 +42,7 @@ class Featuresearch:
                 #accuracy = self.dummy_evaluate(candidate_features)
                 accuracy = validator.validate(
                     feature_subset = candidate_features,
-                    classifier = NNClassifier,
+                    classifier = NNClassifier(),
                     data = self.data_array
                 )
                 print(f"Using feature(s) {sorted(candidate_features)} accuracy is {accuracy:.1f}%")
@@ -88,7 +88,7 @@ class Featuresearch:
                 # accuracy = self.dummy_evaluate(candidate_features)
                 accuracy = validator.validate(
                     feature_subset = candidate_features,
-                    classifier = NNClassifier,
+                    classifier = NNClassifier(),
                     data = self.data_array
                 )
 
