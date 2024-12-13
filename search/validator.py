@@ -35,7 +35,7 @@ class Validator:
             
             # Use rest for training
             train_features = np.delete(features, i, axis=0)
-            train_labels = np.delete(labels, i)
+            train_labels = np.delete(labels, i, axis=0)
             
             # Time the train/test cycle
             classifier.train(train_features, train_labels)
