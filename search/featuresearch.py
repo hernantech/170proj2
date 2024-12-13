@@ -16,6 +16,7 @@ class Featuresearch:
         #otherwise use the csv to fill num features    
         else:
             self.data = pandas.read_csv(data, delim_whitespace=True, header=None)
+            self.data_array = self.data.to_numpy()
             self.num_features = len(self.data.columns) - 1 #index is off by one
             self.features = set(range(1, self.num_features + 1)) #index is off in the other direction by one
             #played around for a bit and set is the only way (I found) to deal with combinations and avoid permutations        
@@ -29,11 +30,11 @@ class Featuresearch:
         print("beginning search.")
         best_total_accuracy = accuracy
         best_total_features = set() #initializing empty set here
+        validator = Validator()  # using the validator
 
         while(not_used_features):
             best_accuracy = -1
             best_feature = None
-            validator = Validator()#using the validator
 
             # Try each unused feature
             for feature in not_used_features:
@@ -42,7 +43,7 @@ class Featuresearch:
                 accuracy = validator.validate(
                     feature_subset = candidate_features,
                     classifier = NNClassifier,
-                    data = self.data.to_numpy()
+                    data = self.data_array
                 )
                 print(f"Using feature(s) {sorted(candidate_features)} accuracy is {accuracy:.1f}%")
                 
@@ -88,7 +89,7 @@ class Featuresearch:
                 accuracy = validator.validate(
                     feature_subset = candidate_features,
                     classifier = NNClassifier,
-                    data = self.data.to_numpy()
+                    data = self.data_array
                 )
 
                 print(f"Using feature(s) {sorted(test_features)} accuracy is {accuracy:.1f}%")

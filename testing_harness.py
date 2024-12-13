@@ -14,14 +14,16 @@ def main():
     print("2) Large Dataset (datasets/large-test-dataset.txt)")
     print("3) Titanic Dataset (datasets/titanic clean.txt)")
 
-    dataset_choice = int(input("Enter choice (1 or 2): "))
+    dataset_choice = int(input("Enter choice (1, 2, or 3): "))
 
     if dataset_choice == 1:
         dataset_path = 'datasets/small-test-dataset.txt'
     elif dataset_choice == 2:
         dataset_path = 'datasets/large-test-dataset.txt'
+    elif dataset_choice == 3:
+        dataset_path = 'datasets/titanic clean.txt'
     else:
-        print("Invalid choice. Please enter 1 or 2.")
+        print("Invalid choice. Please enter 1, 2, or 3")
         return
 
     print("\nType the number of the algorithm you want to run.")
@@ -32,15 +34,23 @@ def main():
 
     if choice == 1:
         print("\n--- Running Forward Selection ---")
+        start_time = time.time()
         searchobj = Featuresearch(data=dataset_path)
-        searchobj.forward_selection()
+        best_features = searchobj.forward_selection()
+        end_time = time.time()
         print("\n--- Forward Selection Completed ---")
+        print(f"Time for Forward Selection: {end_time - start_time:.2f} seconds")
+        print(f"Best Feature Subset (Forward Selection): {best_features}")
 
     elif choice == 2:
         print("\n--- Running Backward Elimination ---")
+        start_time = time.time()
         searchobj = Featuresearch(data=dataset_path)
-        searchobj.backward_elimination()
+        best_features = searchobj.backward_elimination()
+        end_time = time.time()
         print("\n--- Backward Elimination Completed ---")
+        print(f"Time for Backward Elimination: {end_time - start_time:.2f} seconds")
+        print(f"Best Feature Subset (Backward Elimination): {best_features}")
 
     else:
         print("Invalid choice. Please enter 1 or 2.")
@@ -83,4 +93,5 @@ def main():
     print("\nThank you for using Alex & Tim's Feature Selection Algorithm!")
 
 
-main()
+if __name__ == "__main__":
+    main()
