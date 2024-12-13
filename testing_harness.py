@@ -56,13 +56,17 @@ def main():
         print("Invalid choice. Please enter 1 or 2.")
         return
 
+    if not best_features:
+        print("No best features were selected. Exiting.")
+        return
+
     print("\n--- Running NN Classifier ---")
 
     #load the dataset and split it into labels and features
     if dataset_choice == 3:  #titanic is in csv format?
         data = pd.read_csv(dataset_path, sep=',', header=0)
     else:
-        data = pd.read_csv(dataset_path, delim_whitespace=True, header=None)
+        data = pd.read_csv(dataset_path, sep='\s+', header=None)  # updated to use sep='\s+' to avoid FutureWarning just in case
 
     labels = data.iloc[:, 0]    #first column is labels
     features = data.iloc[:, 1:]  #rest are features
