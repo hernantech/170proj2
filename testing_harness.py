@@ -12,6 +12,7 @@ def main():
     print("\nSelect the dataset you want to use.")
     print("1) Small Dataset (datasets/small-test-dataset.txt)")
     print("2) Large Dataset (datasets/large-test-dataset.txt)")
+    print("3) Titanic Dataset (datasets/titanic clean.txt)")
 
     dataset_choice = int(input("Enter choice (1 or 2): "))
 
