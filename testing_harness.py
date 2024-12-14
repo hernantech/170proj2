@@ -46,9 +46,9 @@ def main():
         print("\n--- Running Backward Elimination ---")
         start_time = time.time()
         searchobj = Featuresearch(data=dataset_path)
-        best_features = searchobj.backward_elimination()
+        best_features = searchobj.backwards_elimination() #silliest and most infuriating typo
         end_time = time.time()
-        print("\n--- Backward Elimination Completed ---")
+        print("\n--- Backwards Elimination Completed ---")
         print(f"Time for Backward Elimination: {end_time - start_time:.2f} seconds")
         print(f"Best Feature Subset (Backward Elimination): {best_features}")
 
@@ -56,12 +56,28 @@ def main():
         print("Invalid choice. Please enter 1 or 2.")
         return
 
+    #adding due to error when ran alone
+    if best_features is None:
+        print("Error: No features were selected during feature selection")
+        return
+
     print("\n--- Running NN Classifier ---")
 
     #load the dataset and split it into labels and features
-    if dataset_choice == 3:  #titanic is in csv format?
-        data = pd.read_csv(dataset_path, sep=',', header=0)
+    if dataset_choice == 3:  # Titanic dataset
+        try:
+            # First try reading with default delimiters
+            data = pd.read_csv(dataset_path, delim_whitespace=True, header=None)
+        except:
+            try:
+                # If that fails, try comma delimiter
+                data = pd.read_csv(dataset_path, sep=',', header=0)
+            except Exception as e:
+                print(f"Error reading file: {e}")
+                print("Please check if the file exists and is properly formatted")
+                return
     else:
+        # For small and large datasets
         data = pd.read_csv(dataset_path, delim_whitespace=True, header=None)
 
     labels = data.iloc[:, 0]    #first column is labels
@@ -72,7 +88,7 @@ def main():
 
     #filter the features if subset is available
     selected_features = features.iloc[:, [i - 1 for i in best_features]]  # Convert to 0-indexed
-    data_array = np.column_stack((labels.to_numpy(), selected_features.to_numpy()))  # Combine labels + features
+    data_array = np.column_stack((labels.to_numpy(), features.to_numpy()))  # Combine labels + features
 
     validator = Validator()
     classifier = NNClassifier()

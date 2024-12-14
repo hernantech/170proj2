@@ -17,20 +17,21 @@ class Featuresearch:
         else:
             self.data = pandas.read_csv(data, delim_whitespace=True, header=None)
             self.data_array = self.data.to_numpy()
-            self.num_features = len(self.data.columns) - 1 #index is off by one
+            self.num_features = len(self.data.columns) - 1 #fixing
             self.features = set(range(1, self.num_features + 1)) #index is off in the other direction by one
             #played around for a bit and set is the only way (I found) to deal with combinations and avoid permutations        
+        self.validator = Validator()
+        self.classifier = NNClassifier()
     
     
     def forward_selection(self):
         current_features = set()
         not_used_features = self.features.copy() #copies the set
-        accuracy = self.dummy_evaluate(current_features)
+        accuracy = self.evaluate_features(current_features)
         print(f"Using no features and random evaluation I get an accuracy of {accuracy:.1f}")
         print("beginning search.")
         best_total_accuracy = accuracy
         best_total_features = set() #initializing empty set here
-        validator = Validator()  # using the validator
 
         while(not_used_features):
             best_accuracy = -1
@@ -40,11 +41,14 @@ class Featuresearch:
             for feature in not_used_features:
                 candidate_features = current_features | {feature} #either one
                 #accuracy = self.dummy_evaluate(candidate_features)
+                '''
                 accuracy = validator.validate(
                     feature_subset = candidate_features,
                     classifier = NNClassifier,
                     data = self.data_array
                 )
+                '''
+                accuracy = self.evaluate_features(candidate_features)
                 print(f"Using feature(s) {sorted(candidate_features)} accuracy is {accuracy:.1f}%")
                 
                 #now comparing for the best one
@@ -64,14 +68,15 @@ class Featuresearch:
             print(f"Feature set {sorted(current_features)} was best, accuracy is {best_accuracy:.1f}%")
             print(f"\nFinished search!! The best feature subset is {sorted(best_total_features)}, "f"which has an accuracy of {best_total_accuracy:.1f}%")
 
+        return best_total_features
+
     def backwards_elimination(self):
         current_features = set(range(1, self.num_features +1))
         # starting w/all features
-        best_accuracy = self.dummy_evaluate(current_features)
+        best_accuracy = self.evaluate_features(current_features)
         #forgot these two
         best_total_accuracy = best_accuracy
         best_total_features = current_features.copy()
-        validator = Validator() #using the validator
 
 
         print(f"Using all features and \"random\" evaluation, I get an accuracy of {best_accuracy:.1f}%")
@@ -86,11 +91,15 @@ class Featuresearch:
             for feature in current_features:
                 test_features = current_features - {feature}
                 # accuracy = self.dummy_evaluate(candidate_features)
+                '''
                 accuracy = validator.validate(
                     feature_subset = candidate_features,
                     classifier = NNClassifier,
                     data = self.data_array
                 )
+                '''
+                accuracy = self.evaluate_features(test_features)
+
 
                 print(f"Using feature(s) {sorted(test_features)} accuracy is {accuracy:.1f}%")
                 if accuracy > best_new_accuracy:
@@ -108,8 +117,15 @@ class Featuresearch:
                 print(f"Feature set {sorted(current_features)} was best, accuracy is {best_new_accuracy:.1f}%\n")
         
                 
-        print(f"\nFinished search!! The best feature subset is {sorted(best_total_features)}, " f"which has an accuracy of {best_total_accuracy:.1f}%")
+        print(f"\nFinished search!! The best feature subset is {sorted(best_total_features)}, " 
+              f"which has an accuracy of {best_total_accuracy:.1f}%")
+        return best_total_features
     
-    def dummy_evaluate(self, subset_of_features):
-        return random.uniform(10, 90)
+    def evaluate_features(self, feature_subset):
+        accuracy = self.validator.validate(
+            feature_subset=feature_subset,
+            classifier=self.classifier,
+            data=self.data_array
+        )   
+        return accuracy
     

@@ -1,6 +1,6 @@
 import numpy as np
 import time
-from search.nn_classifier import NNClassifier
+from .nn_classifier import NNClassifier
 
 class Validator:
     def __init__(self):
@@ -17,7 +17,14 @@ class Validator:
         print(f"Data shape before feature selection: {data.shape}")
         print(f"Feature subset: {sorted(feature_subset)}")
         
-        features = data[:, [i for i in feature_subset]]
+        # Get labels from first column
+        labels = data[:, 0]
+        
+        # Convert 1-based feature indices to 0-based for numpy array indexing
+        zero_based_features = [i for i in feature_subset]  # Already 1-based, so use directly
+        
+        # Select features - add 1 to indices since first column is label
+        features = data[:, zero_based_features]  # fixed indexing
         
         # More debug prints
         print(f"Data shape after feature selection: {features.shape}")
